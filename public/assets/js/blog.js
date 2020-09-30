@@ -14,52 +14,51 @@ $(document).ready(function() {
 
   // The code below handles the case where we want to get blog posts for a specific user
   // Looks for a query param in the url for user_id
+  $.get("/api/user_data").then(function(data) {
 
-  var userId;
- 
-  getPosts();
-  
-
-
+    var currentUserId = data.id
+    $(".member-name").text(data.firstName);
+    $(".link").attr("href", "/members?"+currentUserId)
+    getPosts(currentUserId, data.firstName);
+  });
   // This function grabs posts from the database and updates the view
-  function getPosts(user) {
+  
+  function getPosts(userID, name) {
     $.get("/api/posts", function(data) {
-      console.log("Posts", data);
-      console.log(data)
       posts = data;
       if (!posts || !posts.length) {
-        displayEmpty(user);
+        displayEmpty(userID, name);
       }
       else {
-        initializeRows();
+        initializeRows(userID);
       }
     });
   }
 
   // This function does an API call to delete posts
-  function deletePost(id) {
+  function deletePost(id,userId,name) {
     $.ajax({
       method: "DELETE",
       url: "/api/posts/" + id
     })
       .then(function() {
-        getPosts(postCategorySelect.val());
+        getPosts(userId,name);
       });
   }
 
   // InitializeRows handles appending all of our constructed post HTML inside blogContainer
-  function initializeRows() {
+  
+  function initializeRows(userID) {
     blogContainer.empty();
     var postsToAdd = [];
     for (var i = 0; i < posts.length; i++) {
-      postsToAdd.push(createNewRow(posts[i]));
+      postsToAdd.push(createNewRow(posts[i],userID));
     }
     blogContainer.append(postsToAdd);
   }
 
   // This function constructs a post's HTML
-  function createNewRow(post) {
-    console.log(post)
+  function createNewRow(post,userID) {
     var formattedDate = new Date(post.createdAt);
     formattedDate = moment(formattedDate).format("MMMM Do YYYY, h:mm:ss a");
     var newPostCard = $("<div>");
@@ -89,11 +88,10 @@ $(document).ready(function() {
     newPostBody.text(post.body);
     newPostDate.text(formattedDate);
     newPostTitle.append(newPostDate);
-    newPostCardHeading.append(deleteBtn);
-    console.log(post.User.id)
-    console.log(post.UserId)
-    if (post.User.id = post.UserId) {
+  
+    if (userID === post.UserId) {
       newPostCardHeading.append(editBtn);
+      newPostCardHeading.append(deleteBtn);
     }
     newPostCardHeading.append(newPostTitle);
     newPostCardHeading.append(newPostuser);
@@ -111,7 +109,8 @@ $(document).ready(function() {
       .parent()
       .parent()
       .data("post");
-    deletePost(currentPost.id);
+    console.log(currentPost)
+    deletePost(currentPost.id, currentPost.User.id, currentPost.User.firstName);
   }
 
   // This function figures out which post we want to edit and takes it to the appropriate url
@@ -120,20 +119,20 @@ $(document).ready(function() {
       .parent()
       .parent()
       .data("post");
-    window.location.href = "/members?post_id=" + currentPost.id;
+    window.location.href = "/members?"+currentPost.User.id+"/post_id=" + currentPost.id;
   }
 
   // This function displays a message when there are no posts
-  function displayEmpty(id) {
+  function displayEmpty(id,name) {
     var query = window.location.search;
     var partial = "";
     if (id) {
-      partial = " for user #" + id;
+      partial = " for user #" + name;
     }
     blogContainer.empty();
     var messageH2 = $("<h2>");
     messageH2.css({ "text-align": "center", "margin-top": "50px" });
-    messageH2.html("No posts yet" + partial + ", navigate <a href='/memeber'>here</a> in order to get started.");
+    messageH2.html("No posts yet" + partial + ", navigate <a href='/members?" + id +"'>here</a> in order to get started.")
     blogContainer.append(messageH2);
   }
 

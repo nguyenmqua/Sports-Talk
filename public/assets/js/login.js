@@ -28,8 +28,10 @@ $(document).ready(function() {
       email: email,
       password: password
     })
-      .then(function() {
-        window.location.replace("/members");
+      .then(function(data) {
+        console.log(data)
+        var id = data.id
+        window.location.replace("/members?"+id);
         // If there's an error, log the error
       })
      .catch(handleLoginErr);
