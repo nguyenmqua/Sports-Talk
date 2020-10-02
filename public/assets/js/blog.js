@@ -2,8 +2,7 @@ $(document).ready(function() {
   /* global moment */
 
   // blogContainer holds all of our posts
-  var blogContainer = $(".blog-container");
-  var postCategorySelect = $("#category");
+  var blogContainer = $(".blog-container")
   // Click events for the edit and delete buttons
 
   $(document).on("click", "button.delete", handlePostDelete);
@@ -109,7 +108,6 @@ $(document).ready(function() {
       .parent()
       .parent()
       .data("post");
-    console.log(currentPost)
     deletePost(currentPost.id, currentPost.User.id, currentPost.User.firstName);
   }
 

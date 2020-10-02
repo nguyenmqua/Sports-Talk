@@ -1,3 +1,6 @@
+body {
+  background-color: white;
+ }
 form.signup,
 form.login {
   margin-top: 50px;
@@ -5,6 +8,12 @@ form.login {
 
 button.submit {
   float: right;
+}
+
+#preview {
+  width: 500px;
+  height: auto;
+  background: white;
 }
 
 form#cms {

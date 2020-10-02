@@ -1,28 +1,41 @@
 $(document).ready(function() {
-
-  
-  $.get("/api/user_data").then(function(data) {
-    $(".member-name").text(data.firstName);
-  });  
-
+  var profileInput = $("#profile")
   var bodyInput = $("#body");
   var titleInput = $("#title");
   var cmsForm = $("#cms");
-  
-  $(cmsForm).on("submit", handleFormSubmit);
   var updating = false;
   var url = window.location.search;
+  $(cmsForm).on("submit", handleFormSubmit);
+  $(profileInput).on("click", profilePage)
+
 
   if (url.indexOf("/post_id=") !== -1) {
   var postId = url.split("=")[1];
   var userID = url.split("/")[0].split("?")[1]
-  
   getPostData(postId, "post");
   } 
   else if (url.indexOf("?") !== -1) {
     var userID = url.split("?")[1];
-    console.log(userID)
   }
+
+
+  $.get("/api/user_data").then(function(data) {
+    $(".member-name").text(data.firstName);
+    getProfilePic(data.id)
+  });  
+
+  function getProfilePic(id){
+    $.get("/api/profilePic"+ id, function (data){
+
+      var filepath = data.filepath
+      $('#profileInfo').append('<img src=' +filepath+ ' style= "width: 200px; height: auto" >')
+    })
+  }  
+ 
+function profilePage(){
+  window.location.href = "/profile?"+ userID;
+}
+
   // A function for handling what happens when the form to create a new post is submitted
 function handleFormSubmit(event) {
   event.preventDefault();
@@ -75,15 +88,12 @@ function getPostData(id, type) {
   case "post":
     queryUrl = "/api/posts/" + id;
     break;
-  case "author":
-    queryUrl = "/api/authors/" + id;
-    break;
   default:
     return;
   }
   $.get(queryUrl, function(data) {
     if (data) {
-      console.log(data);
+
         // If this post exists, prefill our cms forms with its data
         titleInput.val(data.title);
         bodyInput.val(data.body);
