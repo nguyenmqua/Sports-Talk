@@ -1,7 +1,6 @@
 $(document).ready(function() {
   var profileInput = $("#profile")
   var bodyInput = $("#body");
-  var titleInput = $("#title");
   var cmsForm = $("#cms");
   var updating = false;
   var url = window.location.search;
@@ -40,14 +39,11 @@ function profilePage(){
 function handleFormSubmit(event) {
   event.preventDefault();
   // Wont submit the post if we are missing a body, title, or user
-  if (!titleInput.val().trim() || !bodyInput.val().trim()) {
+  if ( !bodyInput.val().trim()) {
     return;
   }
   // Constructing a newPost object to hand to the database
   var newPost = {
-    title: titleInput
-      .val()
-      .trim(),
     body: bodyInput
       .val()
       .trim(),
@@ -95,7 +91,6 @@ function getPostData(id, type) {
     if (data) {
 
         // If this post exists, prefill our cms forms with its data
-        titleInput.val(data.title);
         bodyInput.val(data.body);
         UserId = data.id;
         // If we have a post with this id, set a flag for us to know to update the post

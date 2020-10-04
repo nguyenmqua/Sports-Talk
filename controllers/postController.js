@@ -27,11 +27,14 @@ const updatePost = (req,res) => {
         }).then(function(dbPost) {
         res.json(dbPost);
       });
-}
+    }
 
 const getPost = (req,res) => {
       db.Post.findAll({
-      include: [db.User]
+      include:[{
+        model: db.User,
+        include:[db.Image]
+      }],
     }).then(function(dbPost) {
       res.json(dbPost);
     });
