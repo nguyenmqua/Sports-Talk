@@ -3,15 +3,41 @@ body {
   background-color: white;
   background-image: url("/assets/css/sports_elements_paper_design_vector.jpg");
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
   font-family: roboto;
 }
 form.signup,
 form.login {
   margin-top: 50px;
 }
+.scores{
+  border-radius: 20px;
+  padding-left: 10px;
+}
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+#navbar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+#navbar {
+  overflow: hidden;
+  background-color: #333;
+  margin-bottom: 10px;
+}
+
+.sticky + .content {
+  padding-top: 60px;
+}
 
 
+.card-group{
+  margin-bottom: 10px;
+}
 
 button.submit {
   float: right;
@@ -54,9 +80,11 @@ button.edit {
   padding:0px;
 }
 
-.display-4{
+.display-4, .font{
   font-family: 'Permanent Marker', cursive;
+  text-decoration: underline;
 }
+
 
 .Profilecontainer{
   margin-bottom: 20px;

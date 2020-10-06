@@ -23,7 +23,7 @@ var uploadController = require("../controllers/upload");
     res.render("index")
   });
 
-  router.get("/profilePage", function(req, res) {
+  router.get("/profilePage", isAuthenticated, function(req, res) {
     res.render("profilePage")
   });
 
@@ -31,15 +31,15 @@ var uploadController = require("../controllers/upload");
     res.render("members",res);
   });
 
-  router.get("/profilePic", function(req, res){
+  router.get("/profilePic",isAuthenticated, function(req, res){
     res.render ("profilePic");
   })
 
-  router.get("/profile", function(req, res){
+  router.get("/profile", isAuthenticated, function(req, res){
     res.render ("profile");
   })
 
-  router.get("/blog", function(req, res) {
+  router.get("/blog",isAuthenticated, function(req, res) {
     res.render("blog")
   });
 
@@ -67,7 +67,7 @@ var uploadController = require("../controllers/upload");
     res.redirect("/");
   });
 
-  router.get("/api/user_data", function(req, res) {
+  router.get("/api/user_data", isAuthenticated, function(req, res) {
   
     if (!req.user) {
       // The user is not logged in, send back an empty object
