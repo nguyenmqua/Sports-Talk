@@ -1,13 +1,17 @@
+ @import url(https://fonts.googleapis.com/css?family=Roboto:900,300);
 body {
   background-color: white;
   background-image: url("/assets/css/sports_elements_paper_design_vector.jpg");
   background-repeat: no-repeat;
-  background-color: white;
- }
+  background-size: contain;
+  font-family: roboto;
+}
 form.signup,
 form.login {
   margin-top: 50px;
 }
+
+
 
 button.submit {
   float: right;
@@ -60,7 +64,7 @@ button.edit {
 
 .blog {
   width: 600px;
-  background-color: #fff;
+  background-color: rgb(233, 229, 229);
   padding: 0 20px 20px;
   border-radius: 6px;
   -webkit-border-radius: 6px;
@@ -81,12 +85,6 @@ button.edit {
   margin-top: 30px;
 }
 
-
-@import url(https://fonts.googleapis.com/css?family=Roboto:900,300);
-body {
-  background-color: #f0f0f0;
-  font-family: roboto;
-}
 .first {
   width: 400px;
   /* margin: 100px auto 100px; */
@@ -131,8 +129,12 @@ body {
 }
 .proPic {
   border-radius: 100px;
-  width: 50px;
+  width: 70px;
+}
 
+#preview{
+  border-radius: 100px;
+  width:200px;
 }
 
 .btn{

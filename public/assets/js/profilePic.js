@@ -24,7 +24,6 @@ $(document).ready(function() {
             $($.parseHTML("<img>"))
               .attr("src", event.target.result)
               .attr("id", "preview")
-              .attr("style", "width:300px, height: 300px")
               .appendTo(placeToInsertImagePreview);
           };
           reader.readAsDataURL(input.files[i]);

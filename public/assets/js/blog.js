@@ -68,7 +68,7 @@ $(document).ready(function() {
   function createNewRow(post,userID) {
     console.log(post)
     var formattedDate = new Date(post.createdAt);
-    formattedDate = moment(formattedDate).format("MMMM Do YYYY, h:mm a");
+    formattedDate = moment(formattedDate).fromNow();
     var newPostCard = $("<div>");
     newPostCard.addClass("card Profilecontainer");
     var newPostCardHeading = $("<div>");
@@ -100,7 +100,7 @@ $(document).ready(function() {
     newPostCardBody.addClass("card-body");
     var newPostBody = $("<h4>");
     newPostBody.text(post.body);
-    newPostDate.text(formattedDate);
+    newPostDate.text("Posted- " + formattedDate);
     var comment = $("<button type='button' class='comment btn btn-info' data-toggle='modal' data-target='#exampleModal'>Reply</button>")
     comment.css({
       float: "right"
