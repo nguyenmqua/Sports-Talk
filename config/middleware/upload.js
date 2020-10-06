@@ -14,7 +14,10 @@ var storage = multer.diskStorage({
     cb(null, __basedir + "/public/resources/static/assets/uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-photo-${file.originalname}`);
+    console.log(file.originalname)
+    var originalName = file.originalname
+    var imageName = originalName.replace(/\s/g, '');
+    cb(null, `${Date.now()}-photo-${imageName}`);
   },
 });
 

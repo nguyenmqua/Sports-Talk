@@ -5,7 +5,7 @@ var session = require("express-session");
 var passport = require("./config/passport");
 var post = require("./routes/post-Routes")
 var profile = require("./routes/profile-routes")
-// var comment = require("./routes/comment-routes")
+var comment = require("./routes/comment-routes")
 
 var PORT = process.env.PORT || 8080;
 var db = require("./models");
@@ -31,7 +31,7 @@ var routes = require("./routes/html-routes");
 app.use(routes);
 app.use(post);
 app.use(profile)
-// app.use(comment)
+app.use(comment)
 
 
 

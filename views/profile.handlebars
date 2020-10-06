@@ -1,16 +1,26 @@
-<div class="container">
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <center>
+    <h1 class="display-4">Sports Talk</h1>
+    <p class="lead">Talk your sport, foo!</p>
+    </center>
+  </div>
+</div>
+<div class="container first">
       <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-12">
 			<form id="profileForm">
           		<div class="form-group">
-					<label for="interest">Interests</label>
-					<textarea placeholder="My interests are..." class="form-control" rows="3" id="interest"></textarea>
+					<h1>Sport Info</h1>
+					<label for="team">Favorite Sport Teams</label>
+					<textarea placeholder="My favorite sport team is..." class="form-control" rows="3" id="team"></textarea>
            			<div class="form-group">
-					<label for="relationship">Relationship Status</label>
-					<select class="custom-select" id="relationship">
-                		<option value="single">Single</option>
-                		<option value="taken">In a relationship</option>
-                		<option value="na">Unknown</option>
+					<label for="sports">My favorite sports</label>
+					<select class="custom-select" id="sports">
+                		<option value="football">Football</option>
+                		<option value="basketball">Basketball</option>
+                		<option value="soccer">Soccer</option>
+						<option value ="hockey">Hockey</option>
   					</select>
               		<label for="location">Location</label>
 					<textarea placeholder="My current location:" class="form-control" rows="3" id="location"></textarea>

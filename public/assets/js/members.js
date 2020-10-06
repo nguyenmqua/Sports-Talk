@@ -2,11 +2,12 @@ $(document).ready(function() {
   var profileInput = $("#profile")
   var bodyInput = $("#body");
   var cmsForm = $("#cms");
+  var newsfeed = $("#newsfeed")
   var updating = false;
   var url = window.location.search;
   $(cmsForm).on("submit", handleFormSubmit);
   $(profileInput).on("click", profilePage)
-
+  $(newsfeed).on("click",newsfeedPage)
 
   if (url.indexOf("/post_id=") !== -1) {
   var postId = url.split("=")[1];
@@ -27,12 +28,16 @@ $(document).ready(function() {
     $.get("/api/profilePic"+ id, function (data){
 
       var filepath = data.filepath
-      $('#profileInfo').append('<img src=' +filepath+ ' style= "width: 200px; height: auto" >')
+      $('#profileInfo').append('<img src=' +filepath+ ' class = "profileInfo" style= "width: 200px; height: auto" >')
     })
   }  
  
 function profilePage(){
   window.location.href = "/profile?"+ userID;
+}
+
+function newsfeedPage(){
+  window.location.href = "blog?" + userID;
 }
 
   // A function for handling what happens when the form to create a new post is submitted
@@ -63,7 +68,7 @@ function handleFormSubmit(event) {
 // Submits a new post and brings user to blog page upon completion
 function submitPost(post) {
   $.post("/api/posts", post, function() {
-    window.location.href = "/blog";
+    window.location.href = "/blog?"+userID;
     });
 };
  
@@ -74,7 +79,7 @@ function updatePost(post) {
     data: post
   })
     .then(function() {
-      window.location.href = "/blog";
+      window.location.href = "/blog?"+userID;
     });
 };
 

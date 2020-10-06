@@ -1,8 +1,8 @@
 $(document).ready(function() {
     var profile = $("#profileForm");
-    var interestInput = $("#interest")
+    var teamInput = $("#team")
     var locationInput = $("#location")
-    var relationshipInput =$("#relationship")
+    var sportsInput =$("#sports")
   
     
     var url = window.location.search
@@ -11,16 +11,16 @@ $(document).ready(function() {
       var userID = url.split("?")[1];
     }
       
-    $(profile).on("submit", handleFormSubmit);
+  $(profile).on("submit", handleFormSubmit);
   
   function handleFormSubmit(event) {
       event.preventDefault()
 
       var newProfile = {
-        interest: interestInput
+        teams: teamInput
           .val()
           .trim(),
-        relationship: relationshipInput
+        sports: sportsInput
           .val(),
         location: locationInput
           .val()

@@ -4,28 +4,35 @@ $(document).ready(function() {
   // blogContainer holds all of our posts
   var blogContainer = $(".blog-container")
   // Click events for the edit and delete buttons
+  var url = window.location.search;
 
   $(document).on("click", "button.delete", handlePostDelete);
   $(document).on("click", "button.edit", handlePostEdit);
-  // $(document).on("click", "button.comment", handlePostComment)
+  $(document).on("click", "button.comment", handlePostComment)
+  $(document).on("click", "button.viewComment", handleViewComment)
 
 
   // Variable to hold our posts
   var posts;
-
  
+  if (url.indexOf("?") !== -1) {
+    var userID = url.split("?")[1];
+  }
+  
   $.get("/api/user_data").then(function(data) {
-
     var currentUserId = data.id
+    console.log(currentUserId)
     $(".member-name").text(data.firstName);
     $(".link").attr("href", "/members?"+currentUserId)
+    $("#profile").attr("href", "/profilePage?"+currentUserId)
     getPosts(currentUserId, data.firstName);
+  
   });
   // This function grabs posts from the database and updates the view
   
   function getPosts(userID, name) {
     $.get("/api/posts", function(data) {
-      posts = data;
+      posts = data.reverse();
       if (!posts || !posts.length) {
         displayEmpty(userID, name);
       }
@@ -34,6 +41,8 @@ $(document).ready(function() {
       }
     });
   }
+
+
 
   // This function does an API call to delete posts
   function deletePost(id,userId,name) {
@@ -46,50 +55,41 @@ $(document).ready(function() {
       });
   }
 
-  function postComment(id,userId){
-    var bodyInput = $("#body").val()
-    var newComment = {
-      PostId: id,
-      body: bodyInput
-        .val()
-        .trim(),
-      UserId: userId
-    };
-    $.post("/api/comments", newComment)
-  }
-
-  // InitializeRows handles appending all of our constructed post HTML inside blogContainer
-  
   function initializeRows(userID) {
     blogContainer.empty();
     var postsToAdd = [];
     for (var i = 0; i < posts.length; i++) {
       postsToAdd.push(createNewRow(posts[i],userID));
     }
+    console.log(postsToAdd)
     blogContainer.append(postsToAdd);
   }
-
   // This function constructs a post's HTML
   function createNewRow(post,userID) {
     console.log(post)
-
     var formattedDate = new Date(post.createdAt);
     formattedDate = moment(formattedDate).format("MMMM Do YYYY, h:mm a");
     var newPostCard = $("<div>");
-    newPostCard.addClass("card");
+    newPostCard.addClass("card Profilecontainer");
     var newPostCardHeading = $("<div>");
     newPostCardHeading.addClass("card-header");
+    var newPostCardFooter = $("<div>");
+    newPostCardFooter.addClass("card-footer");
     var deleteBtn = $("<button>");
-    deleteBtn.text("x");
-    deleteBtn.addClass("delete btn btn-danger");
+    deleteBtn.html("<i class='far fa-trash-alt' style='font-size:20px;color:red'></i>")
+    deleteBtn.addClass("delete btn btn-info");
+    var commentBtn = $("<button>")
+    commentBtn.text("Show Comment")
+    commentBtn.addClass("viewComment btn btn-info");
     var editBtn = $("<button>");
-    editBtn.text("EDIT");
     editBtn.addClass("edit btn btn-info");
+    editBtn.html("<i style='font-size:20px' class='far'>&#xf044;</i>")
     var newPostTitle = $("<h2>");
     var newPostDate = $("<small>");
     var newPostuser = $("<h5>");
-    var profileImage =$('<img src=' +post.User.Image.filepath+ ' style= "width: 100px; height: auto" id ="timelineProfilepic" >')
-    newPostuser.text(  post.User.firstName + " " + post.User.lastName);
+    var profileImage =$('<img src=' +post.User.Image.filepath+ ' id ="timelineProfilepic" class ="proPic" >')
+    newPostuser.html("<a href =/profilePage?"+post.User.id +'>'+post.User.firstName + " " + post.User.lastName +'</a>');
+   
     newPostuser.css({
       float: "left",
       color: "blue",
@@ -101,30 +101,34 @@ $(document).ready(function() {
     var newPostBody = $("<h4>");
     newPostBody.text(post.body);
     newPostDate.text(formattedDate);
-    var comment = $("<button type='button' class='comment btn btn-primary' data-toggle='modal' data-target='#exampleModal'>Reply</button>")
+    var comment = $("<button type='button' class='comment btn btn-info' data-toggle='modal' data-target='#exampleModal'>Reply</button>")
     comment.css({
       float: "right"
     })
-  
+    var modal = $(".modal-body")
+    modal.html('<form id="commentForm"><div class="form-group"><textarea class="form-control" placeholder="Start typing to respond" id="commentInput"></textarea></div>      <div class="modal-footer"><button type="submit" class="btn btn-primary" id="commentReply">Reply</button></div></form>')
+    
+    
     if (userID === post.UserId) {
       newPostCardHeading.append(editBtn);
       newPostCardHeading.append(deleteBtn);
     }
+    newPostCardFooter.append(commentBtn)
     newPostCardHeading.append(newPostTitle);
-    newPostCardHeading.append(newPostuser);
+
     newPostCardHeading.append(profileImage);
+    newPostCardHeading.append(newPostuser);
     newPostCardBody.append(newPostBody);
     newPostCardBody.append(newPostDate);
     newPostCardBody.append(comment);
     newPostCard.append(newPostCardHeading);
     newPostCard.append(newPostCardBody);
+    newPostCard.append(newPostCardFooter)
     
     newPostCard.data("post", post);
     return newPostCard;
   }
   
-
-  // This function figures out which post we want to delete and then calls deletePost
   function handlePostDelete() {
     var currentPost = $(this)
       .parent()
@@ -139,13 +143,24 @@ $(document).ready(function() {
       .parent()
       .parent()
       .data("post");
-    postComment(currentPost.id, currentPost.User.id);
+      console.log(currentPost)
+    postComment(currentPost.id);
   }
 
+  function handleViewComment(){
+    var currentPost = $(this)
+      .parent()
+      .parent()
+      .data("post");
+      viewComment(currentPost.id)
+  }
 
-  
+  function viewComment(id){
+    $.get("/api/comment", function(data){
+      console.log(data)
+    })
+  }
 
-  // This function figures out which post we want to edit and takes it to the appropriate url
   function handlePostEdit() {
     var currentPost = $(this)
       .parent()
@@ -154,7 +169,6 @@ $(document).ready(function() {
     window.location.href = "/members?"+currentPost.User.id+"/post_id=" + currentPost.id;
   }
 
-  // This function displays a message when there are no posts
   function displayEmpty(id,name) {
     var query = window.location.search;
     var partial = "";
@@ -167,5 +181,50 @@ $(document).ready(function() {
     messageH2.html("No posts yet" + partial + ", navigate <a href='/members?" + id +"'>here</a> in order to get started.")
     blogContainer.append(messageH2);
   }
+  function postComment(id){
+    console.log(id)
+    var commentForm = $("#commentForm")
+    $(commentForm).on("submit",handleFormSubmit)
+    var bodyInput = $("#commentInput")
+    function handleFormSubmit(event) {
+      event.preventDefault();
+  
+      if ( !bodyInput.val().trim()) {
+        return;
+      }
+    
+      var newPost = {
+        body: bodyInput
+          .val()
+          .trim(),
+        PostId: id,
+        UserId: userID,
+      };
+      sumbitComment(newPost)
+      console.log(newPost)
+    
+      };
+    
+  function sumbitComment(post){
+    $.post("/api/comment", post, function(data) {
+      console.log(data)
+       });  
+  }
+  }
+
+  // var settings = {
+  //   "async": true,
+  //   "crossDomain": true,
+  //   "url": "https://sportspage-feeds.p.rapidapi.com/games",
+  //   "method": "GET",
+  //   "headers": {
+  //     "x-rapidapi-host": "sportspage-feeds.p.rapidapi.com",
+  //     "x-rapidapi-key": "8fc8315f1amsh70aff4e1a3ba621p1d89e4jsn59ed596832c4"
+  //   }
+  // }
+  
+  // $.ajax(settings).done(function (response) {
+  //   console.log(response);
+  // });
 
 });

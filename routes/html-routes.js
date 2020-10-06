@@ -23,6 +23,10 @@ var uploadController = require("../controllers/upload");
     res.render("index")
   });
 
+  router.get("/profilePage", function(req, res) {
+    res.render("profilePage")
+  });
+
   router.get("/members", isAuthenticated, function(req, res) {
     res.render("members",res);
   });

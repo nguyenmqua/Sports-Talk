@@ -1,37 +1,44 @@
 
 <nav class="navbar navbar-default">
-  <div class="container-fluid">
+  <div class="container first-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="/logout">
         Logout
       </a>
     </div>
     <div class="navbar-header">
-      <a class="navbar-brand" href="/blog">Go to NewsFeed</a>
+      <a class="navbar-brand" id="newsfeed">Go to NewsFeed</a>
     </div>
     <div class="navbar-header">
      <a class="navbar-brand" id="profile">Edit Profile</a>
     </div>
   </div>
 </nav>
-
-  <div class="container profile">
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Sport Talk</h1>
+    <p class="lead">Talk your sport, foo!</p>
+  </div>
+</div>
+  <div class="container first profile">
     <div class="row">
-      <div class="col-md-6  float-left">
+      <div class="col-md-12">
         <h2><center>Welcome <span class="member-name"></span></h2></center>
         <div id = profileInfo></div>
       </div>
-      	<div class="col-md-6  float-right">
-				<form id="cms">
-					<div class="form-group">
-					<center><label for="body">Post</label></center>
-						<textarea placeholder="What is your mind?" class="form-control" rows="5" id="body"></textarea>
-						<br />
-						<button type="submit" class="btn btn-success submit">Submit</button>
-					</div>
-				</form>
-			</div>
-    </div>
+    </div>  
+    <div class="row">
+      <div class="col-md-12">
+			<form id="cms">
+				<div class="form-group">
+				<center><label for="body">Post</label></center>
+					<textarea placeholder="What is your mind?" class="form-control" rows="5" id="body"></textarea>
+					<br />
+					<button type="submit" class="btn btn-success submit">Submit</button>
+        </div>
+				</div>
+			</form>
+	</div>
   </div>
 
 		

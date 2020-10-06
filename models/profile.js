@@ -1,9 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
     const Profile = sequelize.define("Profile", {
-        interest: {
+        teams: {
         type: DataTypes.TEXT,  
         },
-        relationship: {
+        sports: {
         type: DataTypes.STRING,
         },
         location: {

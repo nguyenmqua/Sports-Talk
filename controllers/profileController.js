@@ -10,7 +10,7 @@ const post = (req,res) => {
     });
   }
 
-  const update = (req,res) => {
+const update = (req,res) => {
     console.log(req.body)
     db.Profile.update(
       req.body,
@@ -22,7 +22,24 @@ const post = (req,res) => {
         res.json(dbPost);
       });
 }
+
+const get = (req,res) => {
+  console.log(req)
+  db.Profile.findOne({
+    where: {
+      userId: req.params.id
+    },
+    include: [{
+      model:db.User,
+      include:[db.Image]
+    }],
+   
+  }).then(function(dbPost) {
+    res.json(dbPost);
+  });
+}
   module.exports = {
     post,
-    update
+    update,
+    get,
   }  
