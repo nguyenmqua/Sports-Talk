@@ -6,6 +6,10 @@ body {
   background-size: cover;
   font-family: roboto;
 }
+/* .hidden {
+  display: none;
+} */
+
 form.signup,
 form.login {
   margin-top: 50px;
@@ -158,6 +162,11 @@ button.edit {
 .proPic {
   border-radius: 100px;
   width: 70px;
+  float: left;
+}
+.commentPic {
+  border-radius: 100px;
+  width: 30px;
 }
 
 #preview{
@@ -194,13 +203,18 @@ h2 {
   color: #333;
 }
 h4 {
-  font-size: 15px;
+  font-size: 28px;
   letter-spacing: 1px;
   margin-bottom: 25px
 }
 p {
-  font-size: 16px;
+  font-size: 12px;
   line-height: 26px;
   margin-bottom: 20px;
   color: #666;
+}
+
+.commentDiv{
+  border-top: 2px dotted black;
+  padding-top: 10px;
 }

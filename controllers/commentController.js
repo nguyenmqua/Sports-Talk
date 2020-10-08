@@ -4,17 +4,21 @@ const post = (req,res) => {
    
     db.Comment.create(req.body)
     .then(function(dbPost) {
-      res.json(dbPost);
+      res.json(dbPost.UserId);
     });
   }
 
 const get = (req,res) => {
+
     db.Comment.findAll({
       where: {
         postId: req.params.id,
-      }   
+      },
+      include:[{
+        model: db.User,
+        include:[db.Image]
+      }]   
     }).then(function(dbPost) {
-      console.log(dbPost)
       res.json(dbPost);
     });
 }

@@ -13,10 +13,11 @@ module.exports = function(sequelize, DataTypes) {
       Post.belongsTo(models.User, {
         foreignKey: {
           allowNull: false
-        }
+        },
+        onDelete:"cascade"
       });
       Post.hasMany(models.Comment, {
-        onUpdate: "cascade"
+        onDelete: "cascade"
       });
     };
   

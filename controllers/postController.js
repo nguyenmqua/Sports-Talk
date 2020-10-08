@@ -34,6 +34,12 @@ const getPost = (req,res) => {
       include:[{
         model: db.User,
         include:[db.Image]
+      },{
+        model: db.Comment,
+        include: [{
+          model: db.User,
+          include:[db.Image]
+        }]
       }],
     }).then(function(dbPost) {
       res.json(dbPost);

@@ -32,6 +32,7 @@ $(document).ready(function() {
   function getPosts(userID, name) {
     $.get("/api/posts", function(data) {
       posts = data.reverse();
+      console.log(posts)
       if (!posts || !posts.length) {
         displayEmpty(userID, name);
       }
@@ -75,17 +76,13 @@ $(document).ready(function() {
     var deleteBtn = $("<button>");
     deleteBtn.html("<i class='far fa-trash-alt' style='font-size:20px;color:red'></i>")
     deleteBtn.addClass("delete btn btn-info");
-    var commentBtn = $("<button>")
-    commentBtn.text("Show Comment")
-    commentBtn.addClass("viewComment btn btn-info");
     var editBtn = $("<button>");
     editBtn.addClass("edit btn btn-info");
     editBtn.html("<i style='font-size:20px' class='far'>&#xf044;</i>")
     var newPostDate = $("<small>");
     var newPostuser = $("<h5>");
-    var profileImage =$('<center><img src=' +post.User.Image.filepath+ ' id ="timelineProfilepic" class ="proPic" ></center>')
+    var profileImage =$('<img src=' +post.User.Image.filepath+ ' id ="timelineProfilepic" class ="proPic" >')
     newPostuser.html("<a href =/profilePage?"+post.User.id +'>'+post.User.firstName + " " + post.User.lastName +'</a>');
-   
     newPostuser.css({
       float: "left",
       color: "blue",
@@ -104,12 +101,27 @@ $(document).ready(function() {
     var modal = $(".modal-body")
     modal.html('<form id="commentForm"><div class="form-group"><textarea class="form-control" placeholder="Start typing to respond" id="commentInput"></textarea></div>      <div class="modal-footer"><button type="submit" class="btn btn-primary" id="commentReply">Reply</button></div></form>')
     
+    var commentLength = post.Comments
+    for (i = 0; i < commentLength.length; i++) {
+
+    var commentDiv = $("<div>")
+    commentDiv.addClass("hidden commentDiv")
+    commentDiv.html(post.Comments[i].body)
+    newPostCardFooter.append(commentDiv)
+    var commentUser = $("<div>")
+
+    var cformattedDate = new Date(post.Comments[i].User.updatedAt)
+    cformattedDate = moment(cformattedDate).fromNow();
+    commentUser.html("<img src ='"+ post.Comments[i].User.Image.filepath + "'class = 'commentPic'> <p>" + "<a href ='/profilePage?"+ post.Comments[i].UserId + "'>" + post.Comments[i].User.firstName + " " + post.Comments[i].User.lastName + "</a> -" + cformattedDate)
+    commentUser.addClass("comment")
+    commentDiv.append(commentUser)
+    }
     
+
     if (userID === post.UserId) {
       newPostCardHeading.append(editBtn);
       newPostCardHeading.append(deleteBtn);
     }
-    newPostCardFooter.append(commentBtn)
     newPostCardHeading.append(profileImage);
     newPostCardHeading.append(newPostuser);
     newPostCardBody.append(newPostBody);
@@ -129,7 +141,6 @@ $(document).ready(function() {
       .parent()
       .data("post");
     deletePost(currentPost.id, currentPost.User.id, currentPost.User.firstName);
-
   }
 
   function handlePostComment() {
@@ -145,13 +156,13 @@ $(document).ready(function() {
       .parent()
       .parent()
       .data("post");
-      viewComment(currentPost.id)
+      console.log(currentPost)
+      // viewComment(currentPost.id)
   }
 
-  function viewComment(id){
-    $.get("/api/comment", function(data){
-    })
-  }
+ 
+
+
 
   function handlePostEdit() {
     var currentPost = $(this)
@@ -173,32 +184,33 @@ $(document).ready(function() {
     messageH2.html("No posts yet" + partial + ", navigate <a href='/members?" + id +"'>here</a> in order to get started.")
     blogContainer.append(messageH2);
   }
+
   function postComment(id){
+    $.get("/api/user_data").then(function(data) {
     var commentForm = $("#commentForm")
     $(commentForm).on("submit",handleFormSubmit)
     var bodyInput = $("#commentInput")
     function handleFormSubmit(event) {
       event.preventDefault();
-  
       if ( !bodyInput.val().trim()) {
         return;
       }
-    
-      var newPost = {
+        var newPost = {
         body: bodyInput
           .val()
           .trim(),
         PostId: id,
-        UserId: userID,
+        UserId: data.id,
       };
       sumbitComment(newPost)    
-      };
-    
-  function sumbitComment(post){
-    $.post("/api/comment", post, function(data) {
-       });  
-  }
-  }
+    };  
+    function sumbitComment(post){
+    $.post("/api/comment", post).then(function(data){
+      window.location.href = "/blog?"+data;
+      });
+    };
+  });
+};
 
   $(window).scroll(function(){
     var navbar = $("#navbar");
@@ -210,63 +222,63 @@ $(document).ready(function() {
     }
   }) 
 
-  var settings = {
-    "async": true,
-    "crossDomain": true,
-    "url": "https://sportspage-feeds.p.rapidapi.com/games",
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-host": "sportspage-feeds.p.rapidapi.com",
-      "x-rapidapi-key": "8fc8315f1amsh70aff4e1a3ba621p1d89e4jsn59ed596832c4"
-    }
-  }
+  // var settings = {
+  //   "async": true,
+  //   "crossDomain": true,
+  //   "url": "https://sportspage-feeds.p.rapidapi.com/games",
+  //   "method": "GET",
+  //   "headers": {
+  //     "x-rapidapi-host": "sportspage-feeds.p.rapidapi.com",
+  //     "x-rapidapi-key": "8fc8315f1amsh70aff4e1a3ba621p1d89e4jsn59ed596832c4"
+  //   }
+  // }
   
-  $.ajax(settings).done(function (response) {
-    console.log(response);
-    var x = response.games
+  // $.ajax(settings).done(function (response) {
+  //   console.log(response);
+  //   var x = response.games
 
-    for (i = 0; i < x ; i++){
-    var data = response.results[i]
-     var cardDiv = $("<div>");
-     cardDiv.addClass("card  scores")
-     var group = $(".card-group")
-     group.append(cardDiv)
-     var cardBody = $("<div>")
-     cardBody.addClass("card-body")
-     cardDiv.append(cardBody)
-     var h5 = $("<h5>")
-     h5.addClass("card-title")
-     cardBody.append(h5)
-     var p1 = $("<p>")
-     p1.addClass("card-text")
-     cardBody.append(p1)
-     var footer = $("<div>")
-     footer.addClass("card-footer")
-     cardDiv.append(footer)
-     var small = $("<small>")
-     small.addClass("text-muted")
-     footer.append(small)
-     if (data.status === "in progress"){ 
-     h5.text(data.details.league + ": " + data.summary)
-     p1.html(data.teams.away.team+"'s Score: " + data.scoreboard.score.away + "<br>" + data.teams.home.team+"'s Score: " + data.scoreboard.score.home)
-        if(data.details.league === "MLB" ){
-          small.html("Inning: " + data.scoreboard.currentPeriod )
-        } else if (data.details.league === "NBA" ){
-          small.html("Period: " + data.scoreboard.currentPeriod )
-        } else if (data.details.league === "NFL"){
-          small.html("Quarter: " + data.scoreboard.currentPeriod )
-        }
-    } else if (data.status==="scheduled"){
-     h5.html("Scheduled: <br>" + data.details.league + ": " + data.summary + " at " + data.venue.name )
-     var formattedDate = data.schedule.date
-    formattedDate = moment(formattedDate).fromNow();
-     small.html("<b>Schedule to play </b>" + formattedDate)
-    } else if (data.status === "final"){
-      h5.text(data.details.league + ": " + data.summary)
-      p1.html( +data.teams.away.team+"'s Score: " + data.scoreboard.score.away + "<br>" + data.teams.home.team+"'s Score: " + data.scoreboard.score.home)
-      small.html("<b>Final Result</b>")
-     } 
-    }
-  });
+  //   for (i = 0; i < x ; i++){
+  //   var data = response.results[i]
+  //    var cardDiv = $("<div>");
+  //    cardDiv.addClass("card  scores")
+  //    var group = $(".card-group")
+  //    group.append(cardDiv)
+  //    var cardBody = $("<div>")
+  //    cardBody.addClass("card-body")
+  //    cardDiv.append(cardBody)
+  //    var h5 = $("<h5>")
+  //    h5.addClass("card-title")
+  //    cardBody.append(h5)
+  //    var p1 = $("<p>")
+  //    p1.addClass("card-text")
+  //    cardBody.append(p1)
+  //    var footer = $("<div>")
+  //    footer.addClass("card-footer")
+  //    cardDiv.append(footer)
+  //    var small = $("<small>")
+  //    small.addClass("text-muted")
+  //    footer.append(small)
+  //    if (data.status === "in progress"){ 
+  //    h5.text(data.details.league + ": " + data.summary)
+  //    p1.html(data.teams.away.team +"'s Score: " + data.scoreboard.score.away + "<br>" + data.teams.home.team+"'s Score: " + data.scoreboard.score.home)
+  //       if(data.details.league === "MLB" ){
+  //         small.html("Inning: " + data.scoreboard.currentPeriod )
+  //       } else if (data.details.league === "NBA" ){
+  //         small.html("Period: " + data.scoreboard.currentPeriod )
+  //       } else if (data.details.league === "NFL"){
+  //         small.html("Quarter: " + data.scoreboard.currentPeriod )
+  //       }
+  //   } else if (data.status==="scheduled"){
+  //    h5.html("Scheduled: <br>" + data.details.league + ": " + data.summary + " at " + data.venue.name )
+  //    var formattedDate = data.schedule.date
+  //   formattedDate = moment(formattedDate).fromNow();
+  //    small.html("<b>Schedule to play </b>" + formattedDate)
+  //   } else if (data.status === "final"){
+  //     h5.text(data.details.league + ": " + data.summary)
+  //     p1.html( data.teams.away.team+"'s Score: " + data.scoreboard.score.away + "<br>" + data.teams.home.team+"'s Score: " + data.scoreboard.score.home)
+  //     small.html("<b>Final Result</b>")
+  //    } 
+  //   }
+  // });
 
 });
