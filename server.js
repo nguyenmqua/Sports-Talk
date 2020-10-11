@@ -7,7 +7,7 @@ var post = require("./routes/post-Routes")
 var profile = require("./routes/profile-routes")
 var comment = require("./routes/comment-routes")
 
-var PORT = process.env.PORT || 8080;
+var PORT = process.env.PORT || 3001;
 var db = require("./models");
 global.__basedir = __dirname;
 var app = express();

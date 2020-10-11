@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
         Image.belongsTo(models.User, {
           foreignKey: {
             allowNull: false
-          }
+          },
+          onDelete: "cascade"
         });
       };
   

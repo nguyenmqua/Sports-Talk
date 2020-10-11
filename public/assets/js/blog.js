@@ -110,7 +110,7 @@ $(document).ready(function() {
     newPostCardFooter.append(commentDiv)
     var commentUser = $("<div>")
 
-    var cformattedDate = new Date(post.Comments[i].User.updatedAt)
+    var cformattedDate = new Date(post.Comments[i].User.createdAt)
     cformattedDate = moment(cformattedDate).fromNow();
     commentUser.html("<img src ='"+ post.Comments[i].User.Image.filepath + "'class = 'commentPic'> <p>" + "<a href ='/profilePage?"+ post.Comments[i].UserId + "'>" + post.Comments[i].User.firstName + " " + post.Comments[i].User.lastName + "</a> -" + cformattedDate)
     commentUser.addClass("comment")
@@ -222,63 +222,65 @@ $(document).ready(function() {
     }
   }) 
 
-  // var settings = {
-  //   "async": true,
-  //   "crossDomain": true,
-  //   "url": "https://sportspage-feeds.p.rapidapi.com/games",
-  //   "method": "GET",
-  //   "headers": {
-  //     "x-rapidapi-host": "sportspage-feeds.p.rapidapi.com",
-  //     "x-rapidapi-key": "8fc8315f1amsh70aff4e1a3ba621p1d89e4jsn59ed596832c4"
-  //   }
-  // }
+  var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://sportspage-feeds.p.rapidapi.com/games",
+    "method": "GET",
+    "headers": {
+      "x-rapidapi-host": "sportspage-feeds.p.rapidapi.com",
+      "x-rapidapi-key": "8fc8315f1amsh70aff4e1a3ba621p1d89e4jsn59ed596832c4"
+    }
+  }
   
-  // $.ajax(settings).done(function (response) {
-  //   console.log(response);
-  //   var x = response.games
+  $.ajax(settings).done(function (response) {
+    console.log(response);
+    var x = response.games
 
-  //   for (i = 0; i < x ; i++){
-  //   var data = response.results[i]
-  //    var cardDiv = $("<div>");
-  //    cardDiv.addClass("card  scores")
-  //    var group = $(".card-group")
-  //    group.append(cardDiv)
-  //    var cardBody = $("<div>")
-  //    cardBody.addClass("card-body")
-  //    cardDiv.append(cardBody)
-  //    var h5 = $("<h5>")
-  //    h5.addClass("card-title")
-  //    cardBody.append(h5)
-  //    var p1 = $("<p>")
-  //    p1.addClass("card-text")
-  //    cardBody.append(p1)
-  //    var footer = $("<div>")
-  //    footer.addClass("card-footer")
-  //    cardDiv.append(footer)
-  //    var small = $("<small>")
-  //    small.addClass("text-muted")
-  //    footer.append(small)
-  //    if (data.status === "in progress"){ 
-  //    h5.text(data.details.league + ": " + data.summary)
-  //    p1.html(data.teams.away.team +"'s Score: " + data.scoreboard.score.away + "<br>" + data.teams.home.team+"'s Score: " + data.scoreboard.score.home)
-  //       if(data.details.league === "MLB" ){
-  //         small.html("Inning: " + data.scoreboard.currentPeriod )
-  //       } else if (data.details.league === "NBA" ){
-  //         small.html("Period: " + data.scoreboard.currentPeriod )
-  //       } else if (data.details.league === "NFL"){
-  //         small.html("Quarter: " + data.scoreboard.currentPeriod )
-  //       }
-  //   } else if (data.status==="scheduled"){
-  //    h5.html("Scheduled: <br>" + data.details.league + ": " + data.summary + " at " + data.venue.name )
-  //    var formattedDate = data.schedule.date
-  //   formattedDate = moment(formattedDate).fromNow();
-  //    small.html("<b>Schedule to play </b>" + formattedDate)
-  //   } else if (data.status === "final"){
-  //     h5.text(data.details.league + ": " + data.summary)
-  //     p1.html( data.teams.away.team+"'s Score: " + data.scoreboard.score.away + "<br>" + data.teams.home.team+"'s Score: " + data.scoreboard.score.home)
-  //     small.html("<b>Final Result</b>")
-  //    } 
-  //   }
-  // });
+    for (i = 0; i < x ; i++){
+    var data = response.results[i]
+     var cardDiv = $("<div>");
+     cardDiv.addClass("card  scores")
+     var group = $(".card-group")
+     group.append(cardDiv)
+     var cardBody = $("<div>")
+     cardBody.addClass("card-body")
+     cardDiv.append(cardBody)
+     var h5 = $("<h5>")
+     h5.addClass("card-title")
+     cardBody.append(h5)
+     var p1 = $("<p>")
+     p1.addClass("card-text")
+     cardBody.append(p1)
+     var footer = $("<div>")
+     footer.addClass("card-footer")
+     cardDiv.append(footer)
+     var small = $("<small>")
+     small.addClass("text-muted")
+     footer.append(small)
+     if (data.status === "in progress"){ 
+     h5.text(data.details.league + ": " + data.summary)
+     p1.html(data.teams.away.team +"'s Score: " + data.scoreboard.score.away + "<br>" + data.teams.home.team+"'s Score: " + data.scoreboard.score.home)
+        if(data.details.league === "MLB" ){
+          small.html("Inning: " + data.scoreboard.currentPeriod )
+        } else if (data.details.league === "NBA" ){
+          small.html("Period: " + data.scoreboard.currentPeriod )
+        } else if (data.details.league === "NFL"){
+          small.html("Quarter: " + data.scoreboard.currentPeriod )
+        } else if (data.details.league === "NCAAF"){
+          small.html("Quarter: " + data.scoreboard.currentPeriod )
+        }
+    } else if (data.status==="scheduled"){
+     h5.html("Scheduled: <br>" + data.details.league + ": " + data.summary + " at " + data.venue.name )
+     var formattedDate = data.schedule.date
+    formattedDate = moment(formattedDate).fromNow();
+     small.html("<b>Schedule to play </b>" + formattedDate)
+    } else if (data.status === "final"){
+      h5.text(data.details.league + ": " + data.summary)
+      p1.html( data.teams.away.team+"'s Score: " + data.scoreboard.score.away + "<br>" + data.teams.home.team+"'s Score: " + data.scoreboard.score.home)
+      small.html("<b>Final Result</b>")
+     } 
+    }
+  });
 
 });

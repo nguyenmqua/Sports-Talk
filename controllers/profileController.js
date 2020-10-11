@@ -23,6 +23,17 @@ const update = (req,res) => {
       });
 }
 
+const destroy = (req,res) => {
+  console.log(req.params.id)
+  db.User.destroy({
+         where: {
+          id: req.params.id
+        }
+      }).then(function(dbPost) {
+      res.json(dbPost);
+    });
+}
+
 const get = (req,res) => {
   console.log(req)
   db.Profile.findOne({
@@ -42,4 +53,5 @@ const get = (req,res) => {
     post,
     update,
     get,
+    destroy
   }  

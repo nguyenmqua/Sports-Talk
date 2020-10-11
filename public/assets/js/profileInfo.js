@@ -3,12 +3,22 @@ $(document).ready(function() {
     var teamInput = $("#team")
     var locationInput = $("#location")
     var sportsInput =$("#sports")
-  
+    var deletion = $(".delete")
     
     var url = window.location.search
 
     if (url.indexOf("?") !== -1) {
       var userID = url.split("?")[1];
+    }
+    deletion.on("click", deleteProfile)
+
+    function deleteProfile(){
+    $.ajax({
+        method:"DELETE",
+        url: "/delete" + userID  
+        }).then(function(data){
+          window.location.href = "/logout"
+        })
     }
       
   $(profile).on("submit", handleFormSubmit);

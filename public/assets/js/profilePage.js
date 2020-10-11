@@ -1,5 +1,6 @@
 $(document).ready(function() {
 var url = window.location.search;
+var deletion = $(".delete")
 var team = $("#team")
 var sport =$("#sport")
 var location =$("#location")
@@ -9,6 +10,7 @@ var profilePic = $(".avatar-flip")
 if (url.indexOf("?") !== -1) {
     var userID = url.split("?")[1];
 }
+
 
 $.get("/api/profile"+userID).then(function(data) {
 
